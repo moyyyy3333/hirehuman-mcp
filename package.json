@@ -1,0 +1,14 @@
+{
+  "name": "hirehuman-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for HireHuman.fyi — Let AI agents hire humans for tasks they can't do",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.16.0",
+    "zod": "^3.23.0"
+  }
+}
