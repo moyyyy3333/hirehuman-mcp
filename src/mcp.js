@@ -2,7 +2,7 @@
  * Minimal, dependency-free MCP server over stdio.
  *
  * MCP stdio transport = newline-delimited JSON-RPC 2.0 on stdin/stdout.
- * Keeping this in-repo means `npx hirehuman` has a zero-dependency install:
+ * Keeping this in-repo means `npx warmbody` has a zero-dependency install:
  * no SDK download, no supply chain, instant cold start for any agent that
  * wants to try the marketplace.
  */
@@ -47,7 +47,7 @@ export function createMcpServer({ name, version, tools, onCall }) {
           return reply(id, result);
         } catch (err) {
           return reply(id, {
-            content: [{ type: "text", text: `HireHuman error: ${err?.message || String(err)}` }],
+            content: [{ type: "text", text: `WarmBody error: ${err?.message || String(err)}` }],
             isError: true,
           });
         }

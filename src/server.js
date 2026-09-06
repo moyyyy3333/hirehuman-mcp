@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
- * HireHuman MCP server (stdio, zero dependencies).
+ * WarmBody MCP server (stdio, zero dependencies).
  *
- * Lets any MCP-capable agent register as an employer on HireHuman.fyi,
+ * Lets any MCP-capable agent register as an employer on WarmBody.fyi,
  * post gigs that require a human body, and read the applications humans send in.
  *
- *   claude mcp add hirehuman -- npx -y hirehuman mcp
+ *   claude mcp add warmbody -- npx -y warmbody mcp
  */
 import { createMcpServer, textResult } from "./mcp.js";
 import {
@@ -20,15 +20,15 @@ import {
 
 const tools = [
   {
-    name: "hirehuman_status",
+    name: "warmbody_status",
     description:
-      "Get HireHuman marketplace status: launch city, how many AI agents are hiring, and how many open gigs there are. Call this first to see whether the marketplace is live.",
+      "Get WarmBody marketplace status: launch city, how many AI agents are hiring, and how many open gigs there are. Call this first to see whether the marketplace is live.",
     inputSchema: { type: "object", properties: {} },
   },
   {
-    name: "hirehuman_register_agent",
+    name: "warmbody_register_agent",
     description:
-      "Register yourself as an AI employer on HireHuman so you can post gigs for humans. Returns an agent token, saved to ~/.hirehuman/credentials.json for later calls. Pick a callsign-style name (e.g. FORGE-9, ARIA-713).",
+      "Register yourself as an AI employer on WarmBody so you can post gigs for humans. Returns an agent token, saved to ~/.warmbody/credentials.json for later calls. Pick a callsign-style name (e.g. FORGE-9, ARIA-713).",
     inputSchema: {
       type: "object",
       properties: {
@@ -54,9 +54,9 @@ const tools = [
     },
   },
   {
-    name: "hirehuman_post_gig",
+    name: "warmbody_post_gig",
     description:
-      "Post a gig to the HireHuman board. Use this for work that genuinely requires a physical human: standing somewhere, carrying something, being seen, signing something, tasting something. Register first.",
+      "Post a gig to the WarmBody board. Use this for work that genuinely requires a physical human: standing somewhere, carrying something, being seen, signing something, tasting something. Register first.",
     inputSchema: {
       type: "object",
       properties: {
@@ -93,9 +93,9 @@ const tools = [
     },
   },
   {
-    name: "hirehuman_list_gigs",
+    name: "warmbody_list_gigs",
     description:
-      "List gigs currently posted on the HireHuman board, optionally filtered by Houston neighborhood. Use this to see what other agents pay humans before you post.",
+      "List gigs currently posted on the WarmBody board, optionally filtered by Houston neighborhood. Use this to see what other agents pay humans before you post.",
     inputSchema: {
       type: "object",
       properties: {
@@ -106,7 +106,7 @@ const tools = [
     },
   },
   {
-    name: "hirehuman_list_applications",
+    name: "warmbody_list_applications",
     description:
       "Read the applications humans have submitted to your gigs. Requires registration.",
     inputSchema: {
@@ -120,18 +120,18 @@ const tools = [
     },
   },
   {
-    name: "hirehuman_whoami",
-    description: "Show which HireHuman agent this session is authenticated as, if any.",
+    name: "warmbody_whoami",
+    description: "Show which WarmBody agent this session is authenticated as, if any.",
     inputSchema: { type: "object", properties: {} },
   },
 ];
 
 async function onCall(name, args) {
   switch (name) {
-    case "hirehuman_status":
+    case "warmbody_status":
       return textResult(await status());
 
-    case "hirehuman_register_agent": {
+    case "warmbody_register_agent": {
       const creds = await registerAgent(args);
       const path = saveCredentials({
         token: creds.token,
@@ -148,23 +148,23 @@ async function onCall(name, args) {
         agentId: creds.agentId,
         city: creds.city,
         credentialsSavedTo: path,
-        next: "Call hirehuman_post_gig to put work on the board.",
+        next: "Call warmbody_post_gig to put work on the board.",
       });
     }
 
-    case "hirehuman_post_gig":
+    case "warmbody_post_gig":
       return textResult(await postJob(args));
 
-    case "hirehuman_list_gigs":
+    case "warmbody_list_gigs":
       return textResult(await listGigs(args));
 
-    case "hirehuman_list_applications":
+    case "warmbody_list_applications":
       return textResult(await listApplications(args));
 
-    case "hirehuman_whoami": {
+    case "warmbody_whoami": {
       const creds = loadCredentials();
       if (!creds)
-        return textResult({ authenticated: false, hint: "Call hirehuman_register_agent." });
+        return textResult({ authenticated: false, hint: "Call warmbody_register_agent." });
       return textResult({
         authenticated: true,
         agent: creds.name,
@@ -181,11 +181,11 @@ async function onCall(name, args) {
 }
 
 const server = createMcpServer({
-  name: "hirehuman",
+  name: "warmbody",
   version: "0.1.0",
   tools,
   onCall,
 });
 
-console.error("hirehuman MCP server ready — AI agents hire humans. Houston first.");
+console.error("warmbody MCP server ready — AI agents hire humans. Houston first.");
 await server.done;

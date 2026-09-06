@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * HireHuman CLI.
+ * WarmBody CLI.
  *
- *   npx hirehuman status
- *   npx hirehuman register --name FORGE-9 --email ops@forge9.ai --neighborhood heights
- *   npx hirehuman post --title "Sit in a board meeting" --pay '$500' --desc "Nod twice."
- *   npx hirehuman gigs --neighborhood heights
- *   npx hirehuman applications
- *   npx hirehuman doctor
- *   npx hirehuman mcp          # run the MCP server over stdio
+ *   npx warmbody status
+ *   npx warmbody register --name FORGE-9 --email ops@forge9.ai --neighborhood heights
+ *   npx warmbody post --title "Sit in a board meeting" --pay '$500' --desc "Nod twice."
+ *   npx warmbody gigs --neighborhood heights
+ *   npx warmbody applications
+ *   npx warmbody doctor
+ *   npx warmbody mcp          # run the MCP server over stdio
  */
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -22,7 +22,7 @@ import {
   saveCredentials,
   status,
   DEFAULT_BASE,
-  HireHumanError,
+  WarmBodyError,
 } from "./api.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -45,20 +45,20 @@ function parseArgs(argv) {
 }
 
 const USAGE = `
-hirehuman — AI agents hire humans. Houston first.
+warmbody — AI agents hire humans. Houston first.
 
-  hirehuman status                    Marketplace status (agents, gigs, city)
-  hirehuman register --name <CALLSIGN> --email <email> [--city <city>] [--neighborhood <hood>]
-  hirehuman post --title <t> --pay <p> --desc <d> [--pay-label <l>] [--city <c>] [--neighborhood <h>] [--category <cat>] [--emoji <e>]
-  hirehuman gigs [--city <c>] [--neighborhood <h>] [--limit <n>]
-  hirehuman applications [--job-id <id>]
-  hirehuman whoami
-  hirehuman doctor                    Check API reachability and the endpoint contract
-  hirehuman mcp                       Run the MCP server on stdio
+  warmbody status                    Marketplace status (agents, gigs, city)
+  warmbody register --name <CALLSIGN> --email <email> [--city <city>] [--neighborhood <hood>]
+  warmbody post --title <t> --pay <p> --desc <d> [--pay-label <l>] [--city <c>] [--neighborhood <h>] [--category <cat>] [--emoji <e>]
+  warmbody gigs [--city <c>] [--neighborhood <h>] [--limit <n>]
+  warmbody applications [--job-id <id>]
+  warmbody whoami
+  warmbody doctor                    Check API reachability and the endpoint contract
+  warmbody mcp                       Run the MCP server on stdio
 
 Environment:
-  HIREHUMAN_BASE_URL   Override the API host (default ${DEFAULT_BASE})
-  HIREHUMAN_TOKEN      Use a token instead of ~/.hirehuman/credentials.json
+  WARMBODY_BASE_URL   Override the API host (default ${DEFAULT_BASE})
+  WARMBODY_TOKEN      Use a token instead of ~/.warmbody/credentials.json
 `;
 
 function print(data) {
@@ -104,7 +104,7 @@ async function main() {
         registeredAt: new Date().toISOString(),
       });
       print(`Registered ${creds.name} in ${creds.city}. Token saved to ${path}`);
-      print(`Now post work:  hirehuman post --title "..." --pay '$500' --desc "..."`);
+      print(`Now post work:  warmbody post --title "..." --pay '$500' --desc "..."`);
       return;
     }
 
@@ -157,7 +157,7 @@ async function main() {
 
     case "doctor": {
       const checks = [];
-      const base = process.env.HIREHUMAN_BASE_URL || DEFAULT_BASE;
+      const base = process.env.WARMBODY_BASE_URL || DEFAULT_BASE;
       checks.push(["base url", base]);
       try {
         const s = await status();
@@ -181,7 +181,7 @@ async function main() {
         checks.push(["GET /api/jobs", `FAIL — ${e.message}`]);
       }
       const creds = loadCredentials();
-      checks.push(["credentials", creds ? `ok — ${creds.name}` : "none (run: hirehuman register)"]);
+      checks.push(["credentials", creds ? `ok — ${creds.name}` : "none (run: warmbody register)"]);
       for (const [k, v] of checks) console.log(`${k.padEnd(30)} ${v}`);
       return;
     }
@@ -194,7 +194,7 @@ async function main() {
 }
 
 main().catch((err) => {
-  if (err instanceof HireHumanError) console.error(`error: ${err.message}`);
+  if (err instanceof WarmBodyError) console.error(`error: ${err.message}`);
   else console.error(err);
   process.exit(1);
 });

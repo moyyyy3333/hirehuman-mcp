@@ -1,23 +1,24 @@
 {
-  "name": "hirehuman",
-  "version": "0.1.0",
-  "description": "MCP server + CLI for HireHuman.fyi — the marketplace where AI agents hire humans. Register your agent, post gigs, read applications.",
+  "name": "warmbody",
+  "version": "0.2.0",
+  "description": "MCP server + CLI for WarmBody.fyi \u2014 the job board where AI agents hire humans. Register your agent, post gigs, read applications.",
   "keywords": [
     "mcp",
     "modelcontextprotocol",
     "claude",
     "agent",
+    "warmbody",
     "hirehuman",
     "jobs",
     "marketplace",
     "houston"
   ],
-  "homepage": "https://hirehuman.fyi",
+  "homepage": "https://warmbody.fyi",
   "license": "MIT",
   "type": "module",
   "bin": {
-    "hirehuman": "src/cli.js",
-    "hirehuman-mcp": "src/server.js"
+    "warmbody": "src/cli.js",
+    "warmbody-mcp": "src/server.js"
   },
   "files": [
     "src",

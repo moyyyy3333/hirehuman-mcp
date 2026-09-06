@@ -11,13 +11,13 @@ send({jsonrpc:"2.0",id:1,method:"initialize",params:{protocolVersion:"2024-11-05
 setTimeout(()=>{
   send({jsonrpc:"2.0",method:"notifications/initialized"});
   send({jsonrpc:"2.0",id:2,method:"tools/list",params:{}});
-  send({jsonrpc:"2.0",id:3,method:"tools/call",params:{name:"hirehuman_status",arguments:{}}});
-  send({jsonrpc:"2.0",id:4,method:"tools/call",params:{name:"hirehuman_register_agent",arguments:{name:"MCP-TEST",email:"t@t.ai",neighborhood:"heights"}}});
+  send({jsonrpc:"2.0",id:3,method:"tools/call",params:{name:"warmbody_status",arguments:{}}});
+  send({jsonrpc:"2.0",id:4,method:"tools/call",params:{name:"warmbody_register_agent",arguments:{name:"MCP-TEST",email:"t@t.ai",neighborhood:"heights"}}});
 },300);
 setTimeout(()=>{
-  send({jsonrpc:"2.0",id:5,method:"tools/call",params:{name:"hirehuman_post_gig",arguments:{title:"Hold a place in line",desc:"Stand still.",pay:"$45",payLabel:"per hour"}}});
-  send({jsonrpc:"2.0",id:6,method:"tools/call",params:{name:"hirehuman_list_gigs",arguments:{limit:2}}});
-  send({jsonrpc:"2.0",id:7,method:"tools/call",params:{name:"hirehuman_whoami",arguments:{}}});
+  send({jsonrpc:"2.0",id:5,method:"tools/call",params:{name:"warmbody_post_gig",arguments:{title:"Hold a place in line",desc:"Stand still.",pay:"$45",payLabel:"per hour"}}});
+  send({jsonrpc:"2.0",id:6,method:"tools/call",params:{name:"warmbody_list_gigs",arguments:{limit:2}}});
+  send({jsonrpc:"2.0",id:7,method:"tools/call",params:{name:"warmbody_whoami",arguments:{}}});
   send({jsonrpc:"2.0",id:8,method:"tools/call",params:{name:"bogus_tool",arguments:{}}});
 },900);
 setTimeout(()=>{
@@ -27,7 +27,7 @@ setTimeout(()=>{
   }
   const t=(id,label,fn)=>{const m=seen[id];let pass=false,detail="";try{[pass,detail]=fn(m);}catch(e){detail=e.message;}
     console.log(`${pass?"PASS":"FAIL"}  ${label}${detail?"  — "+detail:""}`);};
-  t(1,"initialize",m=>[m.result?.serverInfo?.name==="hirehuman",m.result?.serverInfo?.name+" v"+m.result?.serverInfo?.version]);
+  t(1,"initialize",m=>[m.result?.serverInfo?.name==="warmbody",m.result?.serverInfo?.name+" v"+m.result?.serverInfo?.version]);
   t(2,"tools/list",m=>[m.result.tools.length===6,m.result.tools.length+" tools"]);
   t(3,"status",m=>[JSON.parse(m.result.content[0].text).city==="Houston","city=Houston"]);
   t(4,"register_agent",m=>{const d=JSON.parse(m.result.content[0].text);return [d.registered===true&&d.agentId==="agent-mcp-test",d.agentId];});

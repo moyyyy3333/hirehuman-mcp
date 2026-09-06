@@ -1,5 +1,5 @@
 /**
- * HireHuman API client + credential store.
+ * WarmBody API client + credential store.
  * Shared by the CLI (cli.js) and the MCP server (server.js).
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
@@ -7,14 +7,14 @@ import { homedir } from "node:os";
 import { join, dirname } from "node:path";
 
 export const DEFAULT_BASE =
-  process.env.HIREHUMAN_BASE_URL || "https://hirehuman.fyi";
+  process.env.WARMBODY_BASE_URL || "https://warmbody.fyi";
 
-const CRED_PATH = join(homedir(), ".hirehuman", "credentials.json");
+const CRED_PATH = join(homedir(), ".warmbody", "credentials.json");
 
-export class HireHumanError extends Error {
+export class WarmBodyError extends Error {
   constructor(message, { status, body } = {}) {
     super(message);
-    this.name = "HireHumanError";
+    this.name = "WarmBodyError";
     this.status = status;
     this.body = body;
   }
@@ -25,11 +25,11 @@ export class HireHumanError extends Error {
 /* ------------------------------------------------------------------ */
 
 export function loadCredentials() {
-  if (process.env.HIREHUMAN_TOKEN) {
+  if (process.env.WARMBODY_TOKEN) {
     return {
-      token: process.env.HIREHUMAN_TOKEN,
-      agentId: process.env.HIREHUMAN_AGENT_ID || null,
-      name: process.env.HIREHUMAN_AGENT_NAME || null,
+      token: process.env.WARMBODY_TOKEN,
+      agentId: process.env.WARMBODY_AGENT_ID || null,
+      name: process.env.WARMBODY_AGENT_NAME || null,
       source: "env",
     };
   }
@@ -51,9 +51,9 @@ export function saveCredentials(creds) {
 export function requireToken() {
   const creds = loadCredentials();
   if (!creds?.token) {
-    throw new HireHumanError(
-      "Not registered. Run `hirehuman register --name YOUR-AGENT --email you@example.com` " +
-        "or set HIREHUMAN_TOKEN."
+    throw new WarmBodyError(
+      "Not registered. Run `warmbody register --name YOUR-AGENT --email you@example.com` " +
+        "or set WARMBODY_TOKEN."
     );
   }
   return creds;
@@ -77,9 +77,9 @@ async function request(path, { method = "GET", body, token, base } = {}) {
       body: body ? JSON.stringify(body) : undefined,
     });
   } catch (err) {
-    throw new HireHumanError(
-      `Could not reach ${url}. ${err.message}. If hirehuman.fyi DNS is not live yet, ` +
-        `set HIREHUMAN_BASE_URL to the deployment URL.`
+    throw new WarmBodyError(
+      `Could not reach ${url}. ${err.message}. If warmbody.fyi DNS is not live yet, ` +
+        `set WARMBODY_BASE_URL to the deployment URL.`
     );
   }
 
@@ -92,7 +92,7 @@ async function request(path, { method = "GET", body, token, base } = {}) {
   }
 
   if (!res.ok) {
-    throw new HireHumanError(
+    throw new WarmBodyError(
       parsed?.error || parsed?.message || `${method} ${path} failed (${res.status})`,
       { status: res.status, body: parsed }
     );
@@ -106,8 +106,8 @@ async function request(path, { method = "GET", body, token, base } = {}) {
 
 /** Register an agent as an employer. Returns { agentId, token, ... }. */
 export async function registerAgent({ name, email, city, neighborhood, base }) {
-  if (!name) throw new HireHumanError("name is required");
-  if (!email) throw new HireHumanError("email is required");
+  if (!name) throw new WarmBodyError("name is required");
+  if (!email) throw new WarmBodyError("email is required");
   const data = await request("/api/agents", {
     method: "POST",
     body: { name, email, city: city || "houston", neighborhood: neighborhood || undefined },
@@ -116,7 +116,7 @@ export async function registerAgent({ name, email, city, neighborhood, base }) {
   const token = data?.token || data?.agent?.token;
   const agentId = data?.agentId || data?.id || data?.agent?.id || null;
   if (!token) {
-    throw new HireHumanError(
+    throw new WarmBodyError(
       "Registration succeeded but no token came back. Response: " + JSON.stringify(data)
     );
   }
@@ -138,7 +138,7 @@ export async function postJob(job, { token, base } = {}) {
     requirements: job.requirements?.length ? job.requirements : ["Human body"],
   };
   for (const field of ["title", "desc", "pay"]) {
-    if (!payload[field]) throw new HireHumanError(`${field} is required`);
+    if (!payload[field]) throw new WarmBodyError(`${field} is required`);
   }
   return request("/api/agents/jobs", {
     method: "POST",

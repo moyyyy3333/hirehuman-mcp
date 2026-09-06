@@ -1,7 +1,7 @@
 # Stage 1 — paste this into the Cursor agent that has the code
 
-You are working in the HireHuman Next.js app (the one with `app/`, `components/`,
-`lib/gigs.ts`) that deploys to `hirehuman.fyi` on Vercel. Do all six items, then push.
+You are working in the WarmBody Next.js app (the one with `app/`, `components/`,
+`lib/gigs.ts`) that deploys to `warmbody.fyi` on Vercel. Do all six items, then push.
 
 ---
 
@@ -66,7 +66,7 @@ Run these against the deployment before you call it done:
 
 ```bash
 # 16 distinct rates and 16 distinct descriptions
-curl -s https://hirehuman.fyi/api/jobs | node -e '
+curl -s https://warmbody.fyi/api/jobs | node -e '
   const d=JSON.parse(require("fs").readFileSync(0));
   const pays=new Set(d.jobs.map(j=>j.pay)), descs=new Set(d.jobs.map(j=>j.desc));
   console.log("gigs",d.jobs.length,"pays",pays.size,"descs",descs.size);
@@ -74,17 +74,17 @@ curl -s https://hirehuman.fyi/api/jobs | node -e '
 '
 
 # no fabricated waitlist number anywhere in the HTML
-curl -s https://hirehuman.fyi | grep -c "12,847" # must be 0
+curl -s https://warmbody.fyi | grep -c "12,847" # must be 0
 
 # source attribution survives to the application
-# submit a test apply from https://hirehuman.fyi/?src=smoketest
+# submit a test apply from https://warmbody.fyi/?src=smoketest
 # then confirm the stored application has src === "smoketest"
 ```
 
 Or, from the `hirehuman` package:
 
 ```bash
-HIREHUMAN_BASE_URL=https://hirehuman.fyi npx hirehuman doctor
+WARMBODY_BASE_URL=https://warmbody.fyi npx warmbody doctor
 ```
 
 `doctor` fails loudly if the board is still placeholder — it checks distinct pay rates and

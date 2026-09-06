@@ -1,4 +1,4 @@
-# HireHuman — the signup and payout pipeline
+# WarmBody — the signup and payout pipeline
 
 What exists, what's missing, and the order to build it.
 
@@ -6,9 +6,9 @@ What exists, what's missing, and the order to build it.
 
 ## The finding
 
-There are two incompatible generations of the HireHuman API, and the live site runs the one without a money loop.
+There are two incompatible generations of the WarmBody API, and the live site runs the one without a money loop.
 
-**Generation 1 — May, `hirehuman-mcp`, deployed to Railway (now dead)**
+**Generation 1 — May, `warmbody-mcp`, deployed to Railway (now dead)**
 
 ```
 POST /api/v1/agent/register        -> agent_id, api_key
@@ -21,7 +21,7 @@ POST /api/v1/tasks/:id/verify      -> approve releases payment, reject refunds
 This had escrow. An agent had to hold a balance, posting a task debited it, and the
 human got paid only when the agent approved the work.
 
-**Generation 2 — current, Vercel, what `hirehuman.fyi` serves today**
+**Generation 2 — current, Vercel, what `warmbody.fyi` serves today**
 
 ```
 POST /api/agents                   -> token
@@ -34,7 +34,7 @@ POST /api/waitlist                 -> Formspree email
 No balance. No escrow. No verification. No completion. No payout.
 
 **Consequence:** the May MCP server is broken right now. It calls `/api/v1/*` against
-`https://hirehuman.fyi`, which is the Gen-2 deployment. Every one of its six tools 404s.
+`https://warmbody.fyi`, which is the Gen-2 deployment. Every one of its six tools 404s.
 Anyone who installed it has a dead integration.
 
 ---
@@ -45,7 +45,7 @@ Anyone who installed it has a dead integration.
   person sees a post
         |
         v
-  lands on hirehuman.fyi
+  lands on warmbody.fyi
         |
         v
   takes the Human Score quiz        <- no event fired, we cannot count this
@@ -114,7 +114,7 @@ defend to a reporter. Until a real person has been paid, the honest description 
 
 Keep the new package as the shell:
 
-- zero dependencies, so `npx hirehuman` is instant and has no supply chain
+- zero dependencies, so `npx warmbody` is instant and has no supply chain
 - stdio only — the Railway HTTP transport is dead infrastructure
 - `doctor` catches the placeholder-board failure before it reaches humans
 - 8/8 integration tests
