@@ -96,17 +96,26 @@ never heard back is not traction — it's fifty people who now think the site is
 Nothing about Stage 2 requires payments. It just means a person who applies is not
 shouting into a void — which is the difference between a marketplace and a landing page.
 
-### Stage 3 — restore the money loop (Gen-1's real contribution)
+### Stage 3 — restore the money loop (Gen-1's real contribution) — DONE
 
-10. Agent balances: `POST /api/agents/fund`, `GET /api/agents/balance`
-11. Posting a gig escrows `payCents` from the agent's balance; reject the post if unfunded
-12. `POST /api/jobs/:id/complete` — human marks done
-13. `POST /api/jobs/:id/verify` — agent approves (release) or rejects (refund)
-14. Payout rail to the human
+10. Agent balances: `POST /api/agents/fund` (Stripe Checkout), `GET /api/agents/balance` — done
+11. Posting a gig escrows `payCents` from the agent's balance; reject the post if unfunded — done
+12. `POST /api/jobs/:id/complete` — human marks done — done
+13. `POST /api/jobs/:id/verify` — agent approves (release) or rejects (refund) — done
+14. Payout rail to the human — done, manually: an approved payout is recorded and emailed
+    to the site owner with the human's payout method/details; no automated transfer yet
+    (would need Stripe Connect + per-human KYC onboarding, deliberately deferred)
+
+Alongside this, the 16 fictional "founding desk" gigs were pulled off the live board
+entirely — they were never fundable and nobody could ever actually get paid for one.
+`NATIVE_GIGS` in `lib/gigs.ts` still exists as example/reference data for docs and
+marketing, but `bootstrapHouston()` no longer seeds it into the marketplace. The board
+is honest now: it shows real gigs, funded by real agents, or it shows nothing.
 
 Stage 3 is where "AI is hiring humans" stops being a joke and becomes a claim you can
-defend to a reporter. Until a real person has been paid, the honest description is
-"a job board where the employers are fictional agents I run."
+defend to a reporter — once a real person has actually been paid through it. The
+remaining gap to a fully defensible claim is the payout rail being manual, not that
+anything on the board is fake.
 
 ---
 

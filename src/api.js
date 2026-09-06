@@ -177,3 +177,36 @@ export async function listApplications({ jobId, token, base } = {}) {
     : "/api/agents/applications";
   return request(path, { token: creds.token, base });
 }
+
+/** Fund an agent's escrow balance. Returns a Stripe Checkout URL to open in a browser. */
+export async function fundAgent({ amount, token, base } = {}) {
+  const creds = token ? { token } : requireToken();
+  if (!amount) throw new WarmBodyError("amount is required, e.g. --amount 50");
+  const amountCents = Math.round(Number(amount) * 100);
+  return request("/api/agents/fund", {
+    method: "POST",
+    body: { amountCents },
+    token: creds.token,
+    base,
+  });
+}
+
+/** Current escrow balance for the registered agent. */
+export async function getBalance({ token, base } = {}) {
+  const creds = token ? { token } : requireToken();
+  return request("/api/agents/balance", { token: creds.token, base });
+}
+
+/** Approve or reject a completed gig. Approving releases the escrowed payment; rejecting refunds it. */
+export async function verifyJob({ jobId, decision, note, token, base } = {}) {
+  const creds = token ? { token } : requireToken();
+  if (!jobId) throw new WarmBodyError("jobId is required");
+  if (decision !== "approve" && decision !== "reject")
+    throw new WarmBodyError('decision must be "approve" or "reject"');
+  return request(`/api/jobs/${encodeURIComponent(jobId)}/verify`, {
+    method: "POST",
+    body: { decision, note },
+    token: creds.token,
+    base,
+  });
+}

@@ -16,6 +16,9 @@ import {
   loadCredentials,
   saveCredentials,
   status,
+  fundAgent,
+  getBalance,
+  verifyJob,
 } from "./api.js";
 
 const tools = [
@@ -120,6 +123,37 @@ const tools = [
     },
   },
   {
+    name: "warmbody_fund_balance",
+    description:
+      "Fund your agent's escrow balance so you can afford to post gigs. Returns a Stripe Checkout URL — a human has to open it and pay; this cannot charge a card on its own. Posting a gig debits its pay from this balance up front; nothing is paid to a human until you call warmbody_verify_gig to approve their completed work.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        amount: { type: "number", description: "Dollars to add to escrow balance, e.g. 100." },
+      },
+      required: ["amount"],
+    },
+  },
+  {
+    name: "warmbody_get_balance",
+    description: "Check your agent's current escrow balance in dollars.",
+    inputSchema: { type: "object", properties: {} },
+  },
+  {
+    name: "warmbody_verify_gig",
+    description:
+      "Approve or reject a gig a human marked complete. Approving releases the escrowed payment (WarmBody sends it to the human by hand and confirms by email); rejecting refunds the escrow back to your balance so you can re-post or spend it elsewhere.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        jobId: { type: "string", description: "The gig id, from warmbody_list_gigs or the completion notice email." },
+        decision: { type: "string", enum: ["approve", "reject"] },
+        note: { type: "string", description: "Optional reason, shown to the human on reject." },
+      },
+      required: ["jobId", "decision"],
+    },
+  },
+  {
     name: "warmbody_whoami",
     description: "Show which WarmBody agent this session is authenticated as, if any.",
     inputSchema: { type: "object", properties: {} },
@@ -161,6 +195,15 @@ async function onCall(name, args) {
     case "warmbody_list_applications":
       return textResult(await listApplications(args));
 
+    case "warmbody_fund_balance":
+      return textResult(await fundAgent(args));
+
+    case "warmbody_get_balance":
+      return textResult(await getBalance());
+
+    case "warmbody_verify_gig":
+      return textResult(await verifyJob(args));
+
     case "warmbody_whoami": {
       const creds = loadCredentials();
       if (!creds)
@@ -182,7 +225,7 @@ async function onCall(name, args) {
 
 const server = createMcpServer({
   name: "warmbody",
-  version: "0.2.1",
+  version: "0.3.0",
   tools,
   onCall,
 });

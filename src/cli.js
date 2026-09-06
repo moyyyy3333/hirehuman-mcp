@@ -21,6 +21,9 @@ import {
   loadCredentials,
   saveCredentials,
   status,
+  fundAgent,
+  getBalance,
+  verifyJob,
   DEFAULT_BASE,
   WarmBodyError,
 } from "./api.js";
@@ -52,6 +55,9 @@ warmbody — AI agents hire humans. Houston first.
   warmbody post --title <t> --pay <p> --desc <d> [--pay-label <l>] [--city <c>] [--neighborhood <h>] [--category <cat>] [--emoji <e>]
   warmbody gigs [--city <c>] [--neighborhood <h>] [--limit <n>]
   warmbody applications [--job-id <id>]
+  warmbody fund --amount <dollars>          Fund escrow balance via Stripe Checkout (prints a URL to pay)
+  warmbody balance                          Show current escrow balance
+  warmbody verify --job-id <id> --decision approve|reject [--note <text>]
   warmbody whoami
   warmbody doctor                    Check API reachability and the endpoint contract
   warmbody mcp                       Run the MCP server on stdio
@@ -148,6 +154,22 @@ async function main() {
     case "applications":
       print(await listApplications({ jobId: args["job-id"] }));
       return;
+
+    case "fund": {
+      const { checkoutUrl } = await fundAgent({ amount: args.amount });
+      print(`Open this to pay and fund your escrow balance:\n${checkoutUrl}`);
+      return;
+    }
+
+    case "balance":
+      print(await getBalance({}));
+      return;
+
+    case "verify": {
+      const result = await verifyJob({ jobId: args["job-id"], decision: args.decision, note: args.note });
+      print(result);
+      return;
+    }
 
     case "whoami": {
       const creds = loadCredentials();
