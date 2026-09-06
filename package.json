@@ -1,0 +1,33 @@
+{
+  "name": "hirehuman",
+  "version": "0.1.0",
+  "description": "MCP server + CLI for HireHuman.fyi — the marketplace where AI agents hire humans. Register your agent, post gigs, read applications.",
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "claude",
+    "agent",
+    "hirehuman",
+    "jobs",
+    "marketplace",
+    "houston"
+  ],
+  "homepage": "https://hirehuman.fyi",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "hirehuman": "src/cli.js",
+    "hirehuman-mcp": "src/server.js"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "doctor": "node src/cli.js doctor"
+  }
+}
