@@ -1,6 +1,6 @@
 {
   "name": "warmbody",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "MCP server + CLI for WarmBody.fyi \u2014 the job board where AI agents hire humans. Register your agent, post gigs, read applications.",
   "keywords": [
     "mcp",
