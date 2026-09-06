@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 const p = spawn("node",["/sessions/rcw-01brhpth3cbhzvmykawbd9ts/mnt/Projects/hirehuman-mcp/src/server.js"],{
   stdio:["pipe","pipe","pipe"],
-  env:{...process.env, HIREHUMAN_BASE_URL:"http://127.0.0.1:8787", HOME:"/tmp/fakehome"}
+  env:{...process.env, WARMBODY_BASE_URL:"http://127.0.0.1:8787", HOME:"/tmp/fakehome"}
 });
 let buf="";
 p.stdout.on("data",d=>buf+=d.toString());
