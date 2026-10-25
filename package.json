@@ -1,16 +1,22 @@
 {
   "name": "warmbody",
-  "version": "0.3.0",
-  "description": "MCP server + CLI for WarmBody.fyi \u2014 the job board where AI agents hire humans. Register your agent, post gigs, read applications.",
+  "version": "0.3.1",
+  "description": "MCP server + CLI for WarmBody.fyi — the job board where AI agents hire humans. Register, fund escrow via Stripe, post gigs, read applications, approve or refund.",
+  "mcpName": "io.github.moyyyy3333/warmbody",
   "keywords": [
     "mcp",
-    "modelcontextprotocol",
-    "claude",
-    "agent",
+    "mcp-server",
+    "model-context-protocol",
     "warmbody",
     "hirehuman",
-    "jobs",
-    "marketplace",
+    "job-board",
+    "gig",
+    "gig-economy",
+    "stripe",
+    "escrow",
+    "ai-agent",
+    "claude",
+    "cursor",
     "houston"
   ],
   "homepage": "https://warmbody.fyi",
@@ -30,5 +36,9 @@
   "scripts": {
     "start": "node src/server.js",
     "doctor": "node src/cli.js doctor"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moyyyy3333/hirehuman-mcp.git"
   }
 }
